@@ -5,7 +5,7 @@ class Scooter{
     this.station = station ? station : null
     this.user = null
     this.serial = Scooter.nextSerial++
-    this.charge = 98
+    this.charge = 100
     this.isBroken = false
   }
 
@@ -54,14 +54,14 @@ class Scooter{
   }
 }
 
-const scooter1 = new Scooter(1)
-scooter1.rent("romanprotoliuk")
-scooter1.dock(1)
+// const scooter1 = new Scooter(1)
+// scooter1.rent("romanprotoliuk")
+// scooter1.dock(1)
 
-const scooter2 = new Scooter(2)
-scooter2.recharge()
+// const scooter2 = new Scooter(2)
+// scooter2.recharge()
 
-const scooter3 = new Scooter(3)
-scooter3.requestRepair()
+// const scooter3 = new Scooter(3)
+// scooter3.requestRepair()
 
 module.exports = Scooter

@@ -4,59 +4,97 @@ const Scooter = require('./Scooter')
 class ScooterApp {
   // ScooterApp code here
   constructor() {
-    this.stations = {station1: [], station2: [], station3: []}
+    this.stations = {"SeaTac": [], "Tacoma": [], "Seattle": []}
     this.registeredUsers = {usernames: []}
   }
 
   registerUser(username, password, age) {
-
+    if (this.registeredUsers.hasOwnProperty(username)) {
+      throw new Error("User already registered.");
+    } else if (age < 18) {
+      throw new Error("User must be 18 or older to register.");
+    } else {
+      const user = new User(username, password, age);
+      this.registeredUsers[username] = user;
+      console.log(`User ${username} has been registered.`);
+      return user;
+    }
   }
-  // If the user is not already registered AND is 18 or older, then add them as a new registered user. 
-  // Log to the console that the user has been registered and return the user.
-  // If the user cannot be registered, throw an error: already registered or too young to register.
 
   loginUser(username, password) {
-
+    const user = this.registeredUsers[username];
+    if (!user || !user.login(password)) {
+      throw new Error("Username or password is incorrect.");
+    } else {
+      console.log(`User ${username} has been logged in.`);
+    }
   }
-  // Locate the registered user by name and call its login method. Log to the console that the user has been logged in. 
-  // If the user cannot be located or if the password is incorrect, then throw an error: Username or password is incorrect.
 
   logoutUser(username) {
-
+    const user = this.registeredUsers[username];
+    if (!user) {
+      throw new Error("No such user exists");
+    } else {
+      user.logout()
+      console.log(`User ${username} has been logged out.`);
+    }
   }
-  // Locate the registered user and call its logout method. Log user is logged out to the console.
-  // If the user cannot be located, throw no such user is logged in error
 
   createScooter(station) {
-
+    if (!this.stations.hasOwnProperty(station)) {
+      throw new Error("No such station.");
+    } else {
+      const scooter = new Scooter();
+      scooter.station = station;
+      this.stations[station].push(scooter);
+      console.log(`Created new scooter at station: ${station}.`);
+      return scooter;
+    }
   }
-  // This method is called by the Scooter company’s home office when new scooters are deployed. 
-  // Create a new scooter, add it to the station’s scooter list, and set its station property. 
-  // Log created new scooter to the console. Return the scooter. 
-  // Throws no such station error if the station does not exist. 
 
   dockScooter(scooter, station) {
-
+    if (!this.stations.hasOwnProperty(station)) {
+      throw new Error("No such station.");
+    } else if (scooter.station === station) {
+      throw new Error("Scooter already at station.");
+    } else {
+      const index = this.stations[scooter.station].indexOf(scooter);
+      this.stations[scooter.station].splice(index, 1);
+      this.stations[station].push(scooter);
+      scooter.station = station;
+      console.log(`Scooter is docked at statian: ${station}.`);
+    }
   }
-  // Add the scooter to the station’s scooter list, and dock it. 
-  // Log scooter is docked to the console.  
-  // Throws no such station error if the station does not exist. 
-  // Throws scooter already at station error if the scooter is already there.
 
   rentScooter(scooter, user) {
-
+    if (scooter.user) {
+      throw new Error("Scooter already rented")
+    } else {
+      const index = this.stations[scooter.station].indexOf(scooter)
+      this.stations[scooter.station].splice(index, 1)
+      scooter.user = user
+      console.log(`Scooter ${scooter.serial} is rented by ${user.username}`)
+    }
   }
-  // Locate the given scooter at one of the stations, and remove it from that station. Rent it to the user. Log scooter is rented to 
-  // the console. 
-  // If the scooter is already rented, throw the error scooter already rented.
 
   print() {
-    
+    console.log("Registered Users:");
+    console.table(this.registeredUsers);
+    console.log("Stations:");
+    for (const station in this.stations) {
+      console.log(`${station}: ${this.stations[station].length} scooters`);
+    }
   }
-  // You will use this handy method when testing your ScooterApp.
-  // Log the list of registered users to the console.
-  // Log the list of stations and how many scooters are at each station to the console.
-  // Take a moment to format it nicely so you can read it.
 }
+
+const newScootApp = new ScooterApp()
+newScootApp.registerUser("rom4ik", "pass123", 23)
+const Dom = newScootApp.registerUser("Dom4ik", "pass123", 27)
+newScootApp.loginUser("rom4ik", "pass123")
+const dockedScoot = newScootApp.createScooter("Tacoma")
+newScootApp.dockScooter(dockedScoot, "SeaTac")
+newScootApp.rentScooter(dockedScoot, Dom)
+newScootApp.print()
+// newScootApp.registerUser("rom4ik", "pass123", 23)
 
 module.exports = ScooterApp
