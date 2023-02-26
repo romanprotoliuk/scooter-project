@@ -1,28 +1,38 @@
 class Scooter{
+  static nextSerial = 1
+
   constructor(station) {
     this.station = station ? station : null
     this.user = null
-    this.nextSerial = 1
-    this.serial = nextSerial
-    this.charge = 100
+    this.serial = Scooter.nextSerial++
+    this.charge = 98
     this.isBroken = false
   }
 
   rent(user) {
-    if (this.charge > 20) {
-      this.station = null
-      this.user = user
-    } else {
-      throw new Error("Scooter needs to charge or scooter needs repair.")
+    if (this.charge < 20) {
+      throw new Error("Scooter needs to charge")
     }
+
+    if (this.isBroken) {
+      throw new Error("Scooter needs repair")
+    }
+
+    this.station = null
+    this.user = user
+
+    console.log(`User ${user} has rented the scooter with a serial number ${this.serial}`)
   }
 
   dock(station) {
     this.station = station
     this.user = null
+
+    console.log(`Scooter with a serial number ${this.serial} has been docked at station ${station} by a user ${this.user}`)
   }
 
   recharge() {
+
     const returnTime = () => {
       this.charge++;
       console.log(`Battery life is at ${this.charge}`);
@@ -30,14 +40,28 @@ class Scooter{
         setTimeout(returnTime, 500);
       }
     };
-    setTimeout(returnTime, 500);
+
+    if (this.charge !== 100) {
+      setTimeout(returnTime, 500);
+    }
   }
 
   requestRepair() {
-    // BONUS: Use a setInterval timer to schedule a repair in 5 seconds.
-    // When time elapses, set isBroken to false and log repair completed to the console.
+    setTimeout(() => {
+      this.isBroken = false;
+      console.log(`Scooter ${this.serial} repair completed`)
+    }, 5000)
   }
 }
 
+const scooter1 = new Scooter(1)
+scooter1.rent("romanprotoliuk")
+scooter1.dock(1)
+
+const scooter2 = new Scooter(2)
+scooter2.recharge()
+
+const scooter3 = new Scooter(3)
+scooter3.requestRepair()
 
 module.exports = Scooter
