@@ -10,6 +10,7 @@ class Scooter{
   }
 
   rent(user) {
+    //I like how you separated these two errors to make sure the dev knows what exactly the issue is!
     if (this.charge < 20) {
       throw new Error("Scooter needs to charge")
     }

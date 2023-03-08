@@ -9,6 +9,7 @@ class ScooterApp {
   }
 
   registerUser(username, password, age) {
+    //Nice use of "hasOwnProperty!"
     if (this.registeredUsers.hasOwnProperty(username)) {
       throw new Error("User already registered.");
     } else if (age < 18) {
@@ -87,6 +88,7 @@ class ScooterApp {
   }
 }
 
+//Are these test cases? Might be best to keep these in the test files
 const newScootApp = new ScooterApp()
 newScootApp.registerUser("rom4ik", "pass123", 23)
 const Dom = newScootApp.registerUser("Dom4ik", "pass123", 27)
