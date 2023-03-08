@@ -7,6 +7,7 @@ class User {
   }
 
   login(password) {
+    //Make sure to get rid of these extra console logs after development!
     // console.log(password)
     // console.log(this.password)
     if (password === this.password) {
